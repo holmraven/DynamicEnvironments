@@ -5,6 +5,9 @@ import net.minecraft.util.math.MathHelper;
 
 public class MorningFogHandler {
     public static float viewDistance;
+    public static final float fogMorningBegin = 5000;
+    public static final float fogMorningEnd = 7500;
+    public static final float fogBeforeMorningBegin = 3500;
 
     public static int getTime() {
         MinecraftClient minecraft = MinecraftClient.getInstance();
@@ -16,10 +19,10 @@ public class MorningFogHandler {
 
     public static float fogValue() {
         float f = MathHelper.clamp(viewDistance / 10.0F, 4.0F, 64.0F);
-        if(getTime() >= 5000 && getTime() <= 7500) {
-            return (viewDistance - f) * (1 - (2500f - (getTime() - 5000f)) / 2500f);
-        } else if (getTime() >= 3500 && getTime() < 5000) {
-            return (viewDistance - f) * (1500f - (getTime() - 3500f)) / 1500f;
+        if(getTime() >= fogMorningBegin && getTime() <= fogMorningEnd) {
+            return (viewDistance - f) * (1 - ((fogMorningEnd - fogMorningBegin) - (getTime() - fogMorningBegin)) / (fogMorningEnd - fogMorningBegin));
+        } else if (getTime() >= fogBeforeMorningBegin && getTime() < fogMorningEnd) {
+            return (viewDistance - f) * ((fogMorningEnd - fogBeforeMorningBegin) - (getTime() - fogBeforeMorningBegin)) / (fogMorningEnd - fogBeforeMorningBegin);
         } else {
             return viewDistance - f;
         }
