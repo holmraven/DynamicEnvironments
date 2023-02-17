@@ -6,6 +6,7 @@
   "mixins": [
   ],
   "client": [
+    "BackgroundRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

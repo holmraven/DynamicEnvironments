@@ -1,14 +1,14 @@
 package com.holmraven.dynamicenvironments;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.util.math.MathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DynamicEnvironments implements ModInitializer {
-	public static final Logger LOGGER = LoggerFactory.getLogger("dynamicenvironments");
+public class DynamicEnvironments implements ClientModInitializer {
+	public static final Logger LOGGER = LoggerFactory.getLogger("Dynamic Environments");
 
 	@Override
-	public void onInitialize() {
-		LOGGER.info("Hello Fabric world!");
+	public void onInitializeClient() {
 	}
 }

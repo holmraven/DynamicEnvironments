@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "dynamicenvironments",
   "version": "${version}",
-
   "name": "Dynamic Environments",
   "description": "A Fabric mod which seeks to improve the audiovisual experience of Minecraft",
   "authors": [
@@ -12,20 +11,18 @@
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
-
   "license": "LGPL-3.0",
   "icon": "assets/dynamicenvironments/icon.png",
-
+  "accessWidener" : "dynamicenvironments.accesswidener",
   "environment": "*",
   "entrypoints": {
-    "main": [
+    "client": [
       "com.holmraven.dynamicenvironments.DynamicEnvironments"
     ]
   },
   "mixins": [
     "dynamicenvironments.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.14.11",
     "minecraft": "~1.19.2",
