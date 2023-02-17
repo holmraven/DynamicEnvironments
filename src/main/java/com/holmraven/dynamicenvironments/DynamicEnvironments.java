@@ -1,7 +1,6 @@
 package com.holmraven.dynamicenvironments;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.util.math.MathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
