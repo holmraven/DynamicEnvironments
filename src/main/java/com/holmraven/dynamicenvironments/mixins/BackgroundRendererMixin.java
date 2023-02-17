@@ -1,5 +1,6 @@
 package com.holmraven.dynamicenvironments.mixins;
 
+import com.holmraven.dynamicenvironments.handler.MorningFogHandler;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.util.math.MathHelper;
@@ -20,13 +21,17 @@ public abstract class BackgroundRendererMixin {
     private static float viewDistance;
 
     @Inject(method = "applyFog", at = @At("HEAD"))
-    private static void applyFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
+    private static void getViewDistance(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo ci) {
         BackgroundRendererMixin.viewDistance = viewDistance;
     }
 
     @Redirect(method = "applyFog", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/BackgroundRenderer$FogData;fogStart:F", opcode = Opcodes.PUTFIELD), slice = @Slice(from = @At(value = "CONSTANT", args = "floatValue=64.0F")))
-    private static void fogStart(BackgroundRenderer.FogData fogData, float value) {
+    private static void handleMorningFog(BackgroundRenderer.FogData fogData, float value) {
             float f = MathHelper.clamp(viewDistance / 10.0F, 4.0F, 64.0F);
-            fogData.fogStart = viewDistance - f;
+            if(MorningFogHandler.isMorning()) {
+                fogData.fogStart = MorningFogHandler.fogValue();
+            } else {
+                fogData.fogStart = viewDistance - f;
+            }
     }
 }
