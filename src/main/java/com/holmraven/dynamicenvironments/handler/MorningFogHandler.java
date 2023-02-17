@@ -22,6 +22,17 @@ public class MorningFogHandler {
     public static float fogValue() {
         float f = MathHelper.clamp(viewDistance / 10.0F, 4.0F, 64.0F);
         if(MorningFogHandler.isMorning()) {
+            switch (getHour()) {
+                case 4 -> {
+                    return 0;
+                }
+                case 5 -> {
+                    return (viewDistance - f) * 0.40f;
+                }
+                case 6 -> {
+                    return (viewDistance - f) * 0.80f;
+                }
+            }
             return 0;
         } else {
             return viewDistance - f;
