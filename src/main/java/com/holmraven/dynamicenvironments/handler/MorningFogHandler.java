@@ -1,8 +1,11 @@
 package com.holmraven.dynamicenvironments.handler;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.math.MathHelper;
 
 public class MorningFogHandler {
+    public static float viewDistance;
+
     public static int getHour() {
         MinecraftClient minecraft = MinecraftClient.getInstance();
 
@@ -17,6 +20,11 @@ public class MorningFogHandler {
     }
 
     public static float fogValue() {
-        return 0;
+        float f = MathHelper.clamp(viewDistance / 10.0F, 4.0F, 64.0F);
+        if(MorningFogHandler.isMorning()) {
+            return 0;
+        } else {
+            return viewDistance - f;
+        }
     }
 }
