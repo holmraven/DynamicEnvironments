@@ -5,9 +5,9 @@ import net.minecraft.util.math.MathHelper;
 
 public class MorningFogHandler {
     public static float viewDistance;
+    public static final float fogBeforeMorningBegin = 3500;
     public static final float fogMorningBegin = 5000;
     public static final float fogMorningEnd = 7500;
-    public static final float fogBeforeMorningBegin = 3500;
 
     public static int getTime() {
         MinecraftClient minecraft = MinecraftClient.getInstance();
