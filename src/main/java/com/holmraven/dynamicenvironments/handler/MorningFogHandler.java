@@ -21,8 +21,8 @@ public class MorningFogHandler {
         float f = MathHelper.clamp(viewDistance / 10.0F, 4.0F, 64.0F);
         if(getTime() >= fogMorningBegin && getTime() <= fogMorningEnd) {
             return (viewDistance - f) * (1 - ((fogMorningEnd - fogMorningBegin) - (getTime() - fogMorningBegin)) / (fogMorningEnd - fogMorningBegin));
-        } else if (getTime() >= fogBeforeMorningBegin && getTime() < fogMorningEnd) {
-            return (viewDistance - f) * ((fogMorningEnd - fogBeforeMorningBegin) - (getTime() - fogBeforeMorningBegin)) / (fogMorningEnd - fogBeforeMorningBegin);
+        } else if (getTime() >= fogBeforeMorningBegin && getTime() < fogMorningBegin) {
+            return (viewDistance - f) * ((fogMorningBegin - fogBeforeMorningBegin) - (getTime() - fogBeforeMorningBegin)) / (fogMorningBegin - fogBeforeMorningBegin);
         } else {
             return viewDistance - f;
         }
