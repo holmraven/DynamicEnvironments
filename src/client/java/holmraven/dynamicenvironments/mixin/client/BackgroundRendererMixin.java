@@ -27,7 +27,7 @@ public abstract class BackgroundRendererMixin {
     @Redirect(method = "applyFog",
             at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/BackgroundRenderer$FogData;fogStart:F", opcode = Opcodes.PUTFIELD),
             slice = @Slice(from = @At(value = "CONSTANT", args = "floatValue=64.0F")))
-    private static void handleMorningFog(BackgroundRenderer.FogData fogData, float value) {
+    private static void handleMorningFogStart(BackgroundRenderer.FogData fogData, float value) {
         fogData.fogStart = MorningFogHandler.fogValue(viewDistance);
     }
 }
