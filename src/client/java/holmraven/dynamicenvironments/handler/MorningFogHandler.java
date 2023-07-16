@@ -1,10 +1,9 @@
-package com.holmraven.dynamicenvironments.handler;
+package holmraven.dynamicenvironments.handler;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 
 public class MorningFogHandler {
-    public static float viewDistance;
     public static final float fogBeforeMorningBegin = 3500;
     public static final float fogMorningBegin = 5000;
     public static final float fogMorningEnd = 7500;
@@ -14,10 +13,10 @@ public class MorningFogHandler {
 
         assert minecraft.player != null;
 
-        return ((int) (minecraft.player.world.getTimeOfDay() + 6000) % 24000);
+        return ((int) (minecraft.player.getWorld().getTimeOfDay() + 6000) % 24000);
     }
 
-    public static float fogValue() {
+    public static float fogValue(float viewDistance) {
         float f = MathHelper.clamp(viewDistance / 10.0F, 4.0F, 64.0F);
         if(getTime() >= fogMorningBegin && getTime() <= fogMorningEnd) {
             return (viewDistance - f) * (1 - ((fogMorningEnd - fogMorningBegin) - (getTime() - fogMorningBegin)) / (fogMorningEnd - fogMorningBegin));
