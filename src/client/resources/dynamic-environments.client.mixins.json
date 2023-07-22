@@ -1,11 +1,12 @@
 {
-	"required": true,
-	"package": "holmraven.dynamicenvironments.mixin.client",
-	"compatibilityLevel": "JAVA_17",
-	"client": [
-		"BackgroundRendererMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "package": "holmraven.dynamicenvironments.mixin.client",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "BackgroundRendererMixin",
+    "PlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
