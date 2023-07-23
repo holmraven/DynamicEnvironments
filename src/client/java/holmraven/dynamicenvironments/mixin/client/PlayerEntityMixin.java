@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +25,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private boolean genDouble = false;
 
     @Unique
-    private boolean isRightFoot;
+    private boolean isRightFoot = false;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -34,39 +33,44 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void footprintTick(CallbackInfo ci) {
-        footprintGenerator();
-        if (this.fallDistance > 0.5F) {
+        float getYawRadians = (float)Math.toRadians(MathHelper.wrapDegrees(this.bodyYaw));
+        double velX = MathHelper.cos(getYawRadians);
+        double velZ = MathHelper.sin(getYawRadians);
+        double y = this.getY() + 0.001F * FootprintParticle.zFighter;
+        if (this.isOnGround() && !this.isInvisible() && !this.isSubmergedInWater()) {
+            if ((int)this.calculateNextStepSoundDistance() == step + 1) {
+                addFootprint(isRightFoot ? calculateRight(velX, velZ)[0] : calculateLeft(velX, velZ)[0], y, isRightFoot ? calculateRight(velX, velZ)[1] : calculateLeft(velX, velZ)[1], velX, velZ);
+            } else if (genDouble) {
+                addFootprint(calculateLeft(velX, velZ)[0], y, calculateLeft(velX, velZ)[1], velX, velZ);
+                addFootprint(calculateRight(velX, velZ)[0], y, calculateRight(velX, velZ)[1], velX, velZ);
+                genDouble = false;
+            }
+        }
+        if ((int)this.calculateNextStepSoundDistance() == step + 1) {
+            step++;
+            isRightFoot = !isRightFoot;
+        }
+        if (this.fallDistance > 1.0F) {
             genDouble = true;
         }
     }
 
     @Unique
-    private void footprintGenerator() {
-        float feetDistanceToCenter = isRightFoot ? -0.15F : 0.15F;
-        float getYawRadians = (float) Math.toRadians(MathHelper.wrapDegrees(this.bodyYaw));
-        double velocityX = MathHelper.cos(getYawRadians);
-        double velocityZ = MathHelper.sin(getYawRadians);
-        double x = this.getX() + velocityX * feetDistanceToCenter;
-        double y = this.getY() + 0.001F * FootprintParticle.zFighter;
-        double z = this.getZ() + velocityZ * feetDistanceToCenter;
-        if (this.isOnGround() && !this.isInvisible() && !this.isSubmergedInWater()) {
-            if ((int) this.calculateNextStepSoundDistance() == step + 1 && !this.getWorld().getBlockState(new BlockPos((int)x, (int)y - 1, (int)z)).isAir()) {
-                this.getWorld().addParticle((ParticleEffect) Registries.PARTICLE_TYPE.get(new Identifier(DynamicEnvironments.MODID, "footprint")), x, y, z, velocityX, 0, velocityZ);
-            } else if (genDouble) {
-                if (!this.getWorld().getBlockState(new BlockPos((int)x, (int)y - 1, (int)z)).isAir()) {
-                    this.getWorld().addParticle((ParticleEffect) Registries.PARTICLE_TYPE.get(new Identifier(DynamicEnvironments.MODID, "footprint")), x, y, z, velocityX, 0, velocityZ);
-                }
-                x = this.getX() + velocityX * -feetDistanceToCenter;
-                z = this.getZ() + velocityZ * -feetDistanceToCenter;
-                if (!this.getWorld().getBlockState(new BlockPos((int)x, (int)y - 1, (int)z)).isAir()) {
-                    this.getWorld().addParticle((ParticleEffect) Registries.PARTICLE_TYPE.get(new Identifier(DynamicEnvironments.MODID, "footprint")), x, y, z, velocityX, 0, velocityZ);
-                }
-                genDouble = false;
-            }
-        }
-        if ((int) this.calculateNextStepSoundDistance() == step + 1) {
-            step++;
-            isRightFoot = !isRightFoot;
-        }
+    private double[] calculateLeft(double velX, double velZ) {
+        double x = this.getX() + velX * 0.15F;
+        double z = this.getZ() + velZ * 0.15F;
+        return new double[] {x, z};
+    }
+
+    @Unique
+    private double[] calculateRight(double velX, double velZ) {
+        double x = this.getX() + velX * -0.15F;
+        double z = this.getZ() + velZ * -0.15F;
+        return new double[] {x, z};
+    }
+
+    @Unique
+    private void addFootprint(double x, double y, double z, double velX, double velZ) {
+        this.getWorld().addParticle((ParticleEffect) Registries.PARTICLE_TYPE.get(new Identifier(DynamicEnvironments.MODID, "footprint")), x, y, z, velX, 0, velZ);
     }
 }
